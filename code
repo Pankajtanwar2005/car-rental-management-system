@@ -1,0 +1,174 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class Car {
+public:
+    int carID;
+    string model;
+    bool isAvailable;
+
+    Car(int id, string carModel) {
+        carID = id;
+        model = carModel;
+        isAvailable = true;  // Initially, car is available
+    }
+
+    void displayCar() {
+        cout << "Car ID: " << carID << " | Model: " << model << " | Availability: ";
+        if (isAvailable) {
+            cout << "Available" << endl;
+        } else {
+            cout << "Not Available" << endl;
+        }
+    }
+
+    void rentCar() {
+        if (isAvailable) {
+            isAvailable = false;
+            cout << "Car rented successfully!" << endl;
+        } else {
+            cout << "Car is currently not available." << endl;
+        }
+    }
+
+    void returnCar() {
+        isAvailable = true;
+        cout << "Car returned successfully!" << endl;
+    }
+};
+
+class CarRentalSystem {
+private:
+    vector<Car> cars;
+
+public:
+    void addCar() {
+        int id;
+        string model;
+        cout << "Enter car ID: ";
+        cin >> id;
+        cin.ignore(); // Ignore newline character after integer input
+        cout << "Enter car model: ";
+        getline(cin, model);
+        
+        Car newCar(id, model);
+        cars.push_back(newCar);
+        cout << "Car added successfully!" << endl;
+    }
+
+    void deleteCar() {
+        int id;
+        cout << "Enter car ID to delete: ";
+        cin >> id;
+
+        for (auto it = cars.begin(); it != cars.end(); ++it) {
+            if (it->carID == id) {
+                cars.erase(it);
+                cout << "Car deleted successfully!" << endl;
+                return;
+            }
+        }
+        cout << "Car with ID " << id << " not found!" << endl;
+    }
+
+    void rentACar() {
+        int id;
+        cout << "Enter car ID to rent: ";
+        cin >> id;
+
+        for (auto &car : cars) {
+            if (car.carID == id) {
+                car.rentCar();
+                return;
+            }
+        }
+        cout << "Car with ID " << id << " not found!" << endl;
+    }
+
+    void returnACar() {
+        int id;
+        cout << "Enter car ID to return: ";
+        cin >> id;
+
+        for (auto &car : cars) {
+            if (car.carID == id) {
+                car.returnCar();
+                return;
+            }
+        }
+        cout << "Car with ID " << id << " not found!" << endl;
+    }
+
+    void displayCars() {
+        if (cars.empty()) {
+            cout << "No cars available in the system." << endl;
+        } else {
+            cout << "List of Cars in the System:" << endl;
+            for (auto &car : cars) {
+                car.displayCar();
+            }
+        }
+    }
+
+    void handlePayment() {
+        int rentalPeriod;
+        double rentalRate = 50.0; // Assume rate is 50 per day for simplicity
+        double totalAmount;
+
+        cout << "Enter rental period (in days): ";
+        cin >> rentalPeriod;
+
+        totalAmount = rentalPeriod * rentalRate;
+        cout << "Total Payment: $" << totalAmount << endl;
+        cout << "Payment Successful!" << endl;
+    }
+};
+
+int main() {
+    CarRentalSystem system;
+    int choice;
+
+    do {
+        cout << "\nCar Rental Management System\n";
+        cout << "1. Add Car\n";
+        cout << "2. Delete Car\n";
+        cout << "3. Rent Car\n";
+        cout << "4. Return Car\n";
+        cout << "5. Display All Cars\n";
+        cout << "6. Make Payment\n";
+        cout << "7. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                system.addCar();
+                break;
+            case 2:
+                system.deleteCar();
+                break;
+            case 3:
+                system.rentACar();
+                break;
+            case 4:
+                system.returnACar();
+                break;
+            case 5:
+                system.displayCars();
+                break;
+            case 6:
+                system.handlePayment();
+                break;
+            case 7:
+                cout << "Exiting system. Goodbye!" << endl;
+                break;
+            default:
+                cout << "Invalid choice! Please try again." << endl;
+        }
+    } while (choice != 7);
+
+    return 0;
+}
